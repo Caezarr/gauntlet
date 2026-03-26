@@ -1,0 +1,27 @@
+{
+  "name": "gauntlet",
+  "version": "1.0.0",
+  "description": "Multi-agent code quality harness powered by Claude Code",
+  "type": "module",
+  "scripts": {
+    "design": "tsx src/index.ts design",
+    "build": "tsx src/index.ts build",
+    "review": "tsx src/index.ts review",
+    "security": "tsx src/index.ts security",
+    "bugfinder": "tsx src/index.ts bugfinder",
+    "status": "tsx src/index.ts status",
+    "install-browsers": "npx playwright install --with-deps chromium firefox webkit"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "playwright": "^1.41.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.12.0",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.3"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

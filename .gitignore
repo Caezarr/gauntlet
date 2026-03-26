@@ -1,0 +1,9 @@
+node_modules/
+dist/
+workspace/
+.env
+.env.local
+*.log
+.DS_Store
+/tmp/test-*.cjs
+/tmp/results-*.json
