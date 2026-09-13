@@ -13,7 +13,7 @@
     "install-browsers": "npx playwright install --with-deps chromium firefox webkit"
   },
   "dependencies": {
-    "commander": "^13.1.0",
+    "commander": "^15.0.0",
     "playwright": "^1.41.0"
   },
   "devDependencies": {
