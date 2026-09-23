@@ -2,7 +2,8 @@ node_modules/
 dist/
 workspace/
 .env
-.env.local
+.env.*
+!.env.example
 *.log
 .DS_Store
 /tmp/test-*.cjs
