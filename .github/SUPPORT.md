@@ -1,12 +1,12 @@
 # Support
 
-## Bugs and feature requests
+See [SUPPORT.md](../SUPPORT.md) at repository root for complete support information, including installation instructions and CLI smoke tests.
 
-Open a [GitHub Issue](https://github.com/Caezarr/gauntlet/issues) with a clear reproduction (command, config snippet, expected vs actual).
+## Quick links
 
-## Security vulnerabilities
-
-Report privately via [GitHub Security Advisories](https://github.com/Caezarr/gauntlet/security/advisories/new). See [SECURITY.md](../SECURITY.md).
+- **Bugs and feature requests:** [GitHub Issues](https://github.com/Caezarr/gauntlet/issues)
+- **Security vulnerabilities:** [GitHub Security Advisories](https://github.com/Caezarr/gauntlet/security/advisories/new) (see [SECURITY.md](../SECURITY.md))
+- **Contact:** gabriel@meetwonka.com
 
 ## Scope
 

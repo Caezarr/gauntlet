@@ -283,6 +283,12 @@ Gauntlet runs without `--dangerously-skip-permissions`. Agents ask for confirmat
 
 ---
 
+## Support
+
+For installation help, CLI troubleshooting, bug reports, or security issues, see [SUPPORT.md](SUPPORT.md).
+
+---
+
 ## Code of Conduct
 
 This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
