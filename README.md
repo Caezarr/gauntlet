@@ -277,6 +277,12 @@ All session output lands in `workspace/` (gitignored):
 
 ---
 
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, testing, and pull request guidelines.
+
+---
+
 ## Permissions
 
 Gauntlet runs without `--dangerously-skip-permissions`. Agents ask for confirmation before modifying files. To run unattended, approve tools at the project level in Claude Code (`/allowed-tools`) rather than bypassing permissions globally.
