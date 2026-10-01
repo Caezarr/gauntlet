@@ -38,6 +38,12 @@ Claude in a single conversation is good. Claude as a coordinated team of special
 
 ---
 
+## Documentation
+
+For a complete index of all agents and skills, see **[docs/INDEX.md](docs/INDEX.md)**.
+
+---
+
 ## Requirements
 
 - [Claude Code](https://claude.ai/code) — authenticated, `claude` in your PATH
