@@ -27,3 +27,10 @@ Skills are workflow entry points that launch the appropriate harness mode and ag
 | **bugfinder.md** | Trigger when the user wants to find bugs, run QA, test a web app, or check what's broken | `skills/bugfinder.md` |
 | **review.md** | Trigger when the user wants a code review or to find issues in a codebase | `skills/review.md` |
 | **security.md** | Trigger when the user wants a security audit, to find vulnerabilities, or harden a codebase | `skills/security.md` |
+
+## Documentation
+
+| File | Purpose | Path |
+|------|---------|------|
+| **CLI-CONTRACT.md** | CLI command reference, required options, and smoke test contract | `docs/CLI-CONTRACT.md` |
+| **TROUBLESHOOTING.md** | Common failure scenarios with symptoms, checks, and fixes | `docs/TROUBLESHOOTING.md` |
