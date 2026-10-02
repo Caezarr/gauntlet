@@ -297,7 +297,9 @@ Gauntlet runs without `--dangerously-skip-permissions`. Agents ask for confirmat
 
 ## Support
 
-For installation help, CLI troubleshooting, bug reports, or security issues, see [SUPPORT.md](SUPPORT.md).
+For common CLI and agent failures, see [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
+
+For installation help, bug reports, or security issues, see [SUPPORT.md](SUPPORT.md).
 
 ---
 
