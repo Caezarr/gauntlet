@@ -35,6 +35,8 @@ npm run status
 
 When modifying agent behavior, verify output in `workspace/` for correctness.
 
+**Type checking:** Run `npx tsc --noEmit` locally to catch type errors before pushing.
+
 ## Pull request checklist
 
 Before opening a PR:
