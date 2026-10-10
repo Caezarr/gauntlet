@@ -54,7 +54,7 @@ For a complete index of all agents and skills, see **[docs/INDEX.md](docs/INDEX.
 ## Setup
 
 ```bash
-git clone https://github.com/your-username/gauntlet
+git clone https://github.com/Caezarr/gauntlet
 cd gauntlet
 npm install
 npm run install-browsers
@@ -300,6 +300,14 @@ Gauntlet runs without `--dangerously-skip-permissions`. Agents ask for confirmat
 For common CLI and agent failures, see [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
 
 For installation help, bug reports, or security issues, see [SUPPORT.md](SUPPORT.md).
+
+---
+
+## Community
+
+This project is licensed under the [MIT License](LICENSE).
+
+To report security vulnerabilities, please email **gabriel@meetwonka.com** — details in [SECURITY.md](SECURITY.md). Do not open public issues for security findings.
 
 ---
 
