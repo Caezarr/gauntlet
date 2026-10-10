@@ -303,6 +303,14 @@ For installation help, bug reports, or security issues, see [SUPPORT.md](SUPPORT
 
 ---
 
+## Community
+
+This project is licensed under the [MIT License](LICENSE).
+
+To report security vulnerabilities, please email **gabriel@meetwonka.com** — details in [SECURITY.md](SECURITY.md). Do not open public issues for security findings.
+
+---
+
 ## Code of Conduct
 
 This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
