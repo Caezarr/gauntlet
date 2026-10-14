@@ -1,6 +1,7 @@
 {
   "name": "gauntlet",
   "version": "1.0.0",
+  "license": "MIT",
   "description": "Multi-agent code quality harness powered by Claude Code",
   "type": "module",
   "scripts": {

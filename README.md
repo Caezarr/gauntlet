@@ -319,4 +319,4 @@ This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDU
 
 ## License
 
-MIT
+[MIT](LICENSE) © 2026 Gabriel Rance (Caezarr). Security reports: see [SECURITY.md](SECURITY.md).
