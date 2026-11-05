@@ -1,13 +1,8 @@
-## What changed
+## Summary
 
--
+Briefly describe what this PR changes.
 
-## Verification
+## Test plan
 
-- [ ] `npm test` / typecheck passes locally
-- [ ] Skill or CLI changes include a smoke command or fixture
-- [ ] Docs updated if behavior or flags changed
-
-## Release notes
-
--
+- [ ] Local smoke / unit checks relevant to the change
+- [ ] No secrets or credentials in the diff
