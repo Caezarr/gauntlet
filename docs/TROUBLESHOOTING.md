@@ -64,35 +64,31 @@ bash scripts/cli-smoke.sh
 
 ---
 
-## 3. TypeScript errors in CI ("typecheck" workflow fails)
+## 3. CI fails (typecheck, definition lint, tests or smoke)
 
 ### Symptoms
-GitHub Actions workflow fails with:
+The `ci` GitHub Actions workflow fails on one of its steps, for example:
 ```
-Run npx tsc --noEmit
-src/index.ts:42:7 - error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+src/cli.ts:42:7 - error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+✗ agents/tester.md: bugfinder pipeline expects it to emit BUG_REPORT
+not ok 3 - review: spawns exactly the agents in its pipeline
 ```
 
 ### Cause
-TypeScript compilation errors that were not caught locally but fail in CI.
+- A type error in `src/` or `test/`
+- An agent/skill frontmatter field is missing or no longer matches `src/protocol.ts`
+- `CLAUDE.md` or an agent's output contract changed without updating `src/protocol.ts` (caught by `test/protocol-sync.test.ts`)
 
 ### Check locally
 ```bash
-npx tsc --noEmit
+npm ci
+npm run check   # typecheck + lint:definitions + test + smoke, same as CI
 ```
-
-This runs the same typecheck that the GitHub workflow uses (see `.github/workflows/typecheck.yml`).
 
 ### Fix
-- Address type errors in the reported files
-- Ensure your Node version matches CI (`node-version: "20"` in typecheck.yml)
-- Ensure dependencies are installed: `npm ci`
-
-If types are correct but the error persists, check if you're using a newer TypeScript version locally than in `package.json`:
-```bash
-npx tsc --version
-cat package.json | grep typescript
-```
+- Address the reported file and line
+- If you changed the protocol on purpose, update `PIPELINES` / `TARGET_SCORES` in `src/protocol.ts` and the agent's frontmatter in the same commit
+- Ensure your Node version matches CI (22 or 24; `engines.node` is `>=22.12`)
 
 ---
 
