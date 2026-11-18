@@ -1,5 +1,28 @@
 export type HarnessMode = "design" | "build" | "review" | "security" | "bugfinder";
-export type AgentName = "orchestrator" | "planner" | "generator" | "evaluator";
+/** Teammates the orchestrator can spawn; each maps to `agents/<role>.md`. */
+export type AgentRole =
+  | "planner"
+  | "generator"
+  | "evaluator"
+  | "reviewer"
+  | "auditor"
+  | "validator"
+  | "implementer"
+  | "tester"
+  | "aggregator";
+export const ALL_AGENT_ROLES: AgentRole[] = [
+  "planner",
+  "generator",
+  "evaluator",
+  "reviewer",
+  "auditor",
+  "validator",
+  "implementer",
+  "tester",
+  "aggregator",
+];
+
+export type BrowserEngine = "chromium" | "firefox" | "webkit" | "all";
 
 export type BugFinderFocus = "ui" | "functional" | "auth" | "api" | "data" | "perf";
 export const ALL_FOCUS_AREAS: BugFinderFocus[] = ["ui", "functional", "auth", "api", "data", "perf"];
@@ -19,7 +42,7 @@ export interface HarnessConfig {
   // Bug finder mode
   focusAreas?: BugFinderFocus[];
   appUrl?: string;
-  browser?: "chromium" | "firefox" | "webkit" | "all";
+  browser?: BrowserEngine;
 }
 
 // ── Design mode ───────────────────────────────────────────────
@@ -38,6 +61,14 @@ export interface DesignScoreMessage {
   scores: DesignScores;
   feedback: string;
   plateau: boolean;
+}
+
+// ── Design + build ────────────────────────────────────────────
+
+export interface GeneratorDoneMessage {
+  type: "GENERATOR_DONE";
+  iteration?: number; // design mode
+  sprint?: number;    // build mode
 }
 
 // ── Build mode ────────────────────────────────────────────────
@@ -187,3 +218,39 @@ export interface ReCheckMessage {
   remaining_issues: number;
   notes: string;
 }
+
+// ── Envelope ──────────────────────────────────────────────────
+
+/** Every message an agent can send to the orchestrator (logged to messages.jsonl). */
+export type AgentMessage =
+  | DesignScoreMessage
+  | GeneratorDoneMessage
+  | SpecMessage
+  | SprintContractMessage
+  | EvaluationMessage
+  | RevisionMessage
+  | ReviewFindingsMessage
+  | SecurityAuditMessage
+  | BugReport
+  | BugAggregation
+  | ValidationMessage
+  | ImplementationDoneMessage
+  | ReCheckMessage;
+
+export type MessageType = AgentMessage["type"];
+
+export const ALL_MESSAGE_TYPES: MessageType[] = [
+  "DESIGN_SCORE",
+  "GENERATOR_DONE",
+  "SPEC",
+  "SPRINT_CONTRACT",
+  "EVALUATION",
+  "REVISION",
+  "REVIEW_FINDINGS",
+  "SECURITY_AUDIT",
+  "BUG_REPORT",
+  "BUG_AGGREGATION",
+  "VALIDATION",
+  "IMPLEMENTATION_DONE",
+  "RECHECK",
+];
