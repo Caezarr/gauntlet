@@ -20,7 +20,7 @@ Pass the `--project` option with the absolute or relative path to your project:
 ```bash
 npm run review -- --project /path/to/project
 npm run security -- --project ./my-app
-npm run bugfinder -- --project /Users/me/project
+npm run bugfinder -- --project /path/to/project
 ```
 
 Note the `--` separator when using npm scripts. For direct CLI usage:

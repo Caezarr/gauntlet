@@ -44,7 +44,7 @@ npm run bugfinder -- \
 
 ```bash
 # Full scan
-npm run bugfinder -- --project '/Users/me/my project' --url http://localhost:3000
+npm run bugfinder -- --project '/path/to/my project' --url http://localhost:3000
 
 # Auth + API only
 npm run bugfinder -- --project /path/to/project --url http://localhost:3000 --focus auth,api

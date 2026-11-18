@@ -15,7 +15,7 @@ Use when asked to: "review this code", "review the project", "find issues", "cod
 
 ## What this skill does
 
-Runs the harness review mode: a Reviewer agent scans the project and proposes fixes → a Validator approves or rejects each one → an Implementer applies approved changes surgically → the Reviewer re-checks to confirm fixes landed correctly.
+Runs the harness review mode: a Reviewer agent scans the project and proposes fixes → a Validator approves or rejects each one → an Implementer applies approved changes surgically → the Validator re-checks to confirm fixes landed correctly.
 
 Nothing touches the codebase without passing the Validator gate.
 
