@@ -1,6 +1,6 @@
 # Gauntlet Index
 
-A comprehensive listing of all agents and skills in the harness system.
+A listing of every agent, skill, source module and doc in the harness. Start with [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Agents
 
@@ -32,5 +32,19 @@ Skills are workflow entry points that launch the appropriate harness mode and ag
 
 | File | Purpose | Path |
 |------|---------|------|
+| **ARCHITECTURE.md** | Roles, pipeline per mode, messages, gates, failure handling, diagrams | `docs/ARCHITECTURE.md` |
 | **CLI-CONTRACT.md** | CLI command reference, required options, and smoke test contract | `docs/CLI-CONTRACT.md` |
 | **TROUBLESHOOTING.md** | Common failure scenarios with symptoms, checks, and fixes | `docs/TROUBLESHOOTING.md` |
+
+## Source
+
+| File | Purpose |
+|------|---------|
+| `src/index.ts` | CLI entry point |
+| `src/cli.ts` | Command wiring: argv → validated options → config → launch |
+| `src/config.ts` | Pure per-mode `HarnessConfig` builders |
+| `src/protocol.ts` | Pipelines, targets, stop conditions, Validator gate, aggregation invariants |
+| `src/runtime.ts` | Filesystem and Claude Code launch (only side effects) |
+| `src/definitions.ts` | Frontmatter lint for `agents/` and `skills/` |
+| `src/types.ts` | Config and inter-agent message contracts |
+| `test/` | node:test suite, including the `CLAUDE.md` ↔ `protocol.ts` drift guard |

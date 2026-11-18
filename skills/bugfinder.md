@@ -1,3 +1,10 @@
+---
+name: bugfinder
+kind: skill
+description: "Run Gauntlet's parallel QA mode (up to 6 testers + aggregator) when asked to find bugs, run QA or test a web app."
+mode: bugfinder
+---
+
 # Bug Finder Skill
 
 Trigger this skill when the user wants to find bugs, run QA, test a web app, or check what's broken.
@@ -37,7 +44,7 @@ npm run bugfinder -- \
 
 ```bash
 # Full scan
-npm run bugfinder -- --project '/Users/me/my project' --url http://localhost:3000
+npm run bugfinder -- --project '/path/to/my project' --url http://localhost:3000
 
 # Auth + API only
 npm run bugfinder -- --project /path/to/project --url http://localhost:3000 --focus auth,api

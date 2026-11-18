@@ -7,7 +7,7 @@ npm install
 npm run install-browsers
 ```
 
-Requires Node.js ≥ 20 and an authenticated Claude Code CLI.
+Requires Node.js ≥ 22.12 and an authenticated Claude Code CLI.
 
 ## Testing your changes
 
@@ -35,7 +35,16 @@ npm run status
 
 When modifying agent behavior, verify output in `workspace/` for correctness.
 
-**Type checking:** Run `npx tsc --noEmit` locally to catch type errors before pushing.
+**Before pushing:** run `npm run check`. It is exactly what CI runs:
+
+| Script | What it checks |
+|---|---|
+| `npm run typecheck` | `tsc` on `src/` and `test/` |
+| `npm run lint:definitions` | frontmatter of `agents/*.md` and `skills/*.md` against the protocol |
+| `npm test` | unit + protocol-sync tests (`node:test`, no network, never launches Claude) |
+| `npm run smoke` | CLI help/argv contract |
+
+If you change `CLAUDE.md` or an agent's output contract, update `src/protocol.ts` in the same PR; `test/protocol-sync.test.ts` fails otherwise.
 
 ## Pull request checklist
 

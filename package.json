@@ -11,7 +11,12 @@
     "security": "tsx src/index.ts security",
     "bugfinder": "tsx src/index.ts bugfinder",
     "status": "tsx src/index.ts status",
-    "install-browsers": "npx playwright install --with-deps chromium firefox webkit"
+    "install-browsers": "npx playwright install --with-deps chromium firefox webkit",
+    "typecheck": "tsc --noEmit && tsc -p tsconfig.test.json",
+    "test": "node --import tsx --test test/*.test.ts",
+    "lint:definitions": "tsx src/definitions.ts",
+    "smoke": "bash scripts/cli-smoke.sh",
+    "check": "npm run typecheck && npm run lint:definitions && npm test && npm run smoke"
   },
   "dependencies": {
     "commander": "^15.1.0",
@@ -23,6 +28,6 @@
     "typescript": "^7.0.2"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.12"
   }
 }

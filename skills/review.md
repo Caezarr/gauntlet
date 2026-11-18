@@ -1,3 +1,10 @@
+---
+name: review
+kind: skill
+description: "Run Gauntlet's review mode (Reviewer, Validator gate, Implementer, recheck) when asked for a code review."
+mode: review
+---
+
 # Code Review Skill
 
 Trigger this skill when the user wants a code review, wants to find issues in a codebase, or wants bugs/performance/maintainability problems identified and fixed.
@@ -8,7 +15,7 @@ Use when asked to: "review this code", "review the project", "find issues", "cod
 
 ## What this skill does
 
-Runs the harness review mode: a Reviewer agent scans the project and proposes fixes → a Validator approves or rejects each one → an Implementer applies approved changes surgically → the Reviewer re-checks to confirm fixes landed correctly.
+Runs the harness review mode: a Reviewer agent scans the project and proposes fixes → a Validator approves or rejects each one → an Implementer applies approved changes surgically → the Validator re-checks to confirm fixes landed correctly.
 
 Nothing touches the codebase without passing the Validator gate.
 

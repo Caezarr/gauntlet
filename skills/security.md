@@ -1,3 +1,10 @@
+---
+name: security
+kind: skill
+description: "Run Gauntlet's security mode (Auditor, Validator gate, Implementer, re-audit) when asked for a security audit."
+mode: security
+---
+
 # Security Audit Skill
 
 Trigger this skill when the user wants a security audit, wants to find vulnerabilities, or wants to harden a codebase.

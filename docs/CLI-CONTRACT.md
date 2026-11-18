@@ -29,7 +29,7 @@ npx tsx src/index.ts security --help
 npx tsx src/index.ts bugfinder --help
 ```
 
-Expect exit 0 and the command names above in help output.
+Expect exit 0 and the command names above in help output. `npm run smoke` runs this block (`scripts/cli-smoke.sh`); `test/cli.test.ts` covers the same contract plus the config each command writes, with an in-memory runtime.
 
 Missing required `--project` on `review` / `security` / `bugfinder` should exit non-zero.
 

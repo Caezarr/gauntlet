@@ -6,61 +6,79 @@
   ██████  ██   ██  ██████  ██   ████    ██    ███████ ███████    ██
 ```
 
-**Your code runs the gauntlet. Parallel AI agents. Real evidence. No mercy.**
+**Your code runs the gauntlet. Parallel AI agents. Real evidence. No unreviewed writes.**
+
+[![ci](https://github.com/Caezarr/gauntlet/actions/workflows/ci.yml/badge.svg)](https://github.com/Caezarr/gauntlet/actions/workflows/ci.yml)
 
 ---
 
-Gauntlet is a multi-agent orchestration harness built on [Claude Code](https://claude.ai/code). It doesn't review your code in a single conversation — it deploys a coordinated team of specialized agents that run in parallel, each attacking a different area simultaneously, then aggregates their findings into reports with real evidence: console logs, HTTP response bodies, stack traces, timing breakdowns.
+## The problem
 
----
+Asking one LLM conversation to "find the bugs" or "fix the security issues" fails in predictable ways:
 
-## Why Gauntlet
+- **It is serial.** One context walks the UI, then the API, then auth. Slow, and later areas get a tired context.
+- **It describes instead of proving.** *"The form looks broken"* is not a bug report. A stack trace and an HTTP body are.
+- **It grades its own homework.** The same context that proposed a fix decides the fix is fine and writes it to disk.
 
-Claude in a single conversation is good. Claude as a coordinated team of specialists — each with a narrow mandate, a supervisor that checks their work, and evidence-based reporting — is a different category of tool.
+## What Gauntlet does
 
-**Parallelism.** Six bug hunters run simultaneously. The auth agent doesn't wait for the UI agent. Total time: one agent's runtime, not six.
+Gauntlet runs a **team** of Claude Code agents with narrow mandates, a written protocol, and gates:
 
-**Evidence, not descriptions.** Every bug ships with the console error that triggered it, the HTTP response body, the exact input that caused the failure. Not *"the form is broken"* — `POST /api/users → 500: Cannot read property 'id' of undefined at UserService.js:142`.
-
-**Checked work.** A Validator agent reviews every proposed fix before it touches your codebase. It rejects fixes that are wrong, incomplete, or risky. Nothing lands without passing this gate.
-
----
-
-## Modes
+- **Parallel specialists.** Up to six bug hunters (ui, functional, auth, api, data, perf) run at the same time; an aggregator deduplicates and scores.
+- **Evidence-based reports.** Every bug carries the console error, the HTTP response, the exact input. Example: `POST /api/users → 500: Cannot read property 'id' of undefined at UserService.js:142`.
+- **A Validator gate before any write.** In review and security modes a separate Validator approves or rejects each proposed fix. The Implementer applies only approved fixes, then a recheck confirms they landed.
 
 | Mode | Pipeline | Output |
 |------|----------|--------|
-| `bugfinder` | 6 parallel testers → Aggregator | Scored QA report (0–10) |
-| `review` | Reviewer → Validator → Implementer → Re-check | Issues found, vetted, applied, verified |
-| `security` | Auditor → Validator → Implementer → Re-audit | Vulnerabilities patched, risk score confirmed |
+| `bugfinder` | N parallel testers → Aggregator | Scored QA report (0–10) |
+| `review` | Reviewer → **Validator gate** → Implementer → Validator recheck | Issues found, vetted, applied, verified |
+| `security` | Auditor → **Validator gate** → Implementer → Auditor re-audit | Vulnerabilities patched, risk ≤ 3/10 |
 | `design` | Generator ↔ Evaluator loop | HTML file scoring ≥ 32/40 |
-| `build` | Planner → Generator ↔ Evaluator | Working app that passes QA |
+| `build` | Planner → Generator ↔ Evaluator sprints | Working app that passes QA (≥ 8/10) |
+
+**How it works in one paragraph:** the CLI validates your options, writes `workspace/gauntlet-config.json`, and launches Claude Code with agent teams enabled. That session follows [`CLAUDE.md`](CLAUDE.md), spawns the agents in [`agents/`](agents/), routes their typed JSON messages ([`src/types.ts`](src/types.ts)), logs every message to `workspace/messages.jsonl`, and stops on a gate or a score threshold.
+
+**Read next: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** (roles, pipeline per mode, messages, gates, failure handling, diagrams).
 
 ---
 
-## Documentation
+## Quick start
 
-For a complete index of all agents and skills, see **[docs/INDEX.md](docs/INDEX.md)**.
-
----
-
-## Requirements
-
-- [Claude Code](https://claude.ai/code) — authenticated, `claude` in your PATH
-- Node.js ≥ 20
-
----
-
-## Setup
+Requirements: [Claude Code](https://claude.ai/code) authenticated with `claude` on your `PATH`, and Node.js ≥ 22.12.
 
 ```bash
 git clone https://github.com/Caezarr/gauntlet
 cd gauntlet
 npm install
-npm run install-browsers
+npm run install-browsers   # Playwright engines for the bugfinder testers
+
+npm run bugfinder -- --project /path/to/project --url http://localhost:3000
+npm run review    -- --project /path/to/project
+npm run security  -- --project /path/to/project --severity high
+npm run status    # current session state
 ```
 
-No API keys. No config files. No environment variables.
+No API keys, no config files, no environment variables. Output lands in `workspace/` (gitignored).
+
+---
+
+## How to verify
+
+Everything below runs offline and never launches Claude:
+
+```bash
+npm ci
+npm run check          # = typecheck + lint:definitions + test + smoke (what CI runs)
+```
+
+| Check | What it proves |
+|---|---|
+| `npm run typecheck` | `src/` and `test/` compile under `strict` |
+| `npm run lint:definitions` | every `agents/*.md` / `skills/*.md` has valid frontmatter that matches the pipeline table |
+| `npm test` | CLI → config wiring for all modes, stop conditions, plateau rule, Validator gate, aggregation invariants, and a drift guard that pins `CLAUDE.md` to `src/protocol.ts` |
+| `npm run smoke` | help text and argv contract ([docs/CLI-CONTRACT.md](docs/CLI-CONTRACT.md)) |
+
+CI runs the same steps on Node 22 and 24 for every pull request.
 
 ---
 
@@ -98,7 +116,7 @@ npm run bugfinder -- --project /path/to/project --url http://localhost:3000 --br
 npm run bugfinder -- --project /path/to/project
 ```
 
-> Paths with spaces: use single quotes — `--project '/Users/me/my project'`
+> Paths with spaces: use single quotes — `--project '/path/to/my project'`
 
 ### Focus areas
 
@@ -145,7 +163,7 @@ Validator    checks each fix — correct? safe? in scope?
     ↓
 Implementer  applies approved changes surgically (no reformatting, no scope creep)
     ↓
-Reviewer     re-reads modified files to confirm fixes landed correctly
+Validator    re-reads modified files to confirm fixes landed correctly
 ```
 
 Fixes are specific by design: *"Replace the for loop at line 42 with a list comprehension to eliminate the N+1 query"* — not *"optimize your queries."* The Validator rejects anything vague or incorrect before it reaches your files.
@@ -210,61 +228,39 @@ Planner writes a spec → Generator implements → Evaluator tests as a real use
 
 ---
 
-## Session status
-
-```bash
-npm run status
-```
-
----
-
 ## Claude Code skills
 
-Install the included skills to invoke Gauntlet directly from any Claude Code session:
+Install the included skills to invoke Gauntlet from any Claude Code session:
 
 ```bash
 cp skills/*.md ~/.claude/skills/
 ```
 
-Then:
-
-```
-/bugfinder  →  parallel QA run
-/review     →  code review pipeline
-/security   →  security audit pipeline
-```
+Then `/bugfinder`, `/review` or `/security`.
 
 ---
 
-## How it works
-
-The CLI writes a config to `workspace/gauntlet-config.json`, then launches Claude Code with `CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1`. Claude reads `CLAUDE.md` (the orchestration protocol) and coordinates everything — spawning agents, routing messages, aggregating results.
+## Repository layout
 
 ```
 gauntlet/
-├── CLAUDE.md              ← orchestration protocol
+├── CLAUDE.md              orchestration protocol the Lead Orchestrator follows
 ├── src/
-│   ├── index.ts           ← CLI
-│   └── types.ts           ← agent message contracts (TypeScript)
-├── agents/
-│   ├── tester.md          ← bug finder (up to 6 run in parallel)
-│   ├── reviewer.md        ← code reviewer
-│   ├── auditor.md         ← security auditor (OWASP, CWE refs)
-│   ├── validator.md       ← approves/rejects fixes before they apply
-│   ├── implementer.md     ← applies changes surgically, no scope creep
-│   ├── aggregator.md      ← merges + deduplicates parallel bug reports
-│   ├── generator.md       ← design + build code generator
-│   ├── evaluator.md       ← scores output, feeds actionable feedback
-│   └── planner.md         ← spec writer for build mode
+│   ├── index.ts           CLI entry point
+│   ├── cli.ts             command wiring (argv → config → launch)
+│   ├── config.ts          pure per-mode config builders
+│   ├── protocol.ts        pipelines, targets, stop rules, Validator gate, aggregation rules
+│   ├── runtime.ts         filesystem + Claude Code launch (the only side effects)
+│   ├── definitions.ts     frontmatter lint for agents/ and skills/
+│   └── types.ts           config + inter-agent message contracts
+├── agents/                one markdown file per role (frontmatter: modes, emitted messages)
+├── skills/                Claude Code skill entry points
 ├── scripts/
-│   └── browser.js         ← Playwright runner used by tester agents
-└── skills/
-    ├── bugfinder.md       ← /bugfinder Claude Code skill
-    ├── review.md          ← /review Claude Code skill
-    └── security.md        ← /security Claude Code skill
+│   ├── browser.js         Playwright runner used by tester agents
+│   └── cli-smoke.sh       CLI contract smoke test
+├── test/                  node:test suite (no network, no Claude)
+└── docs/                  ARCHITECTURE, CLI-CONTRACT, TROUBLESHOOTING, INDEX
 ```
-
----
 
 ## Output
 
@@ -272,51 +268,29 @@ All session output lands in `workspace/` (gitignored):
 
 | File | Contents |
 |------|----------|
-| `qa-report.md` | Final QA report — quality score, all bugs deduplicated and ranked |
-| `bugs-{area}.md` | Per-agent reports — bugs with console logs, HTTP evidence, stack traces |
+| `qa-report.md` | Final QA report: quality score, all bugs deduplicated and ranked |
+| `bugs-{area}.md` | Per-agent reports with console logs, HTTP evidence, stack traces |
 | `findings.md` | Review issues with proposed fixes |
-| `vulnerabilities.md` | Security audit — CWE refs, attack scenarios, proposed patches |
+| `vulnerabilities.md` | Security audit: CWE refs, attack scenarios, proposed patches |
 | `validation.md` | Approved / rejected list with reasons |
 | `state.md` | Live session status, summary tables |
-| `messages.jsonl` | Raw agent message log |
-| `screenshots-{area}/` | Taken only when a bug is confirmed — never as documentation |
-
----
-
-## Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, testing, and pull request guidelines.
+| `messages.jsonl` | Append-only log of every agent message |
+| `screenshots-{area}/` | Taken only when a bug is confirmed |
 
 ---
 
 ## Permissions
 
-Gauntlet runs without `--dangerously-skip-permissions`. Agents ask for confirmation before modifying files. To run unattended, approve tools at the project level in Claude Code (`/allowed-tools`) rather than bypassing permissions globally.
+Gauntlet runs without `--dangerously-skip-permissions`. Agents ask before modifying files. To run unattended, approve tools at the project level in Claude Code (`/allowed-tools`) rather than bypassing permissions globally.
 
----
+## Contributing, support, security
 
-## Support
-
-For common CLI and agent failures, see [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md).
-
-For installation help, bug reports, or security issues, see [SUPPORT.md](SUPPORT.md).
-
----
-
-## Community
-
-This project is licensed under the [MIT License](LICENSE).
-
-To report security vulnerabilities, please email **gabriel@meetwonka.com** — details in [SECURITY.md](SECURITY.md). Do not open public issues for security findings.
-
----
-
-## Code of Conduct
-
-This project adheres to the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md). By participating, you are expected to uphold this code.
-
----
+- [CONTRIBUTING.md](CONTRIBUTING.md): setup, `npm run check`, PR checklist
+- [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md): common CLI and agent failures
+- [SUPPORT.md](SUPPORT.md): help and bug reports
+- [SECURITY.md](SECURITY.md): report vulnerabilities privately, never in public issues
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md): Contributor Covenant
 
 ## License
 
-[MIT](LICENSE) © 2026 Gabriel Rance (Caezarr). Security reports: see [SECURITY.md](SECURITY.md).
+[MIT](LICENSE) © 2026 Gabriel Rance (Caezarr).
