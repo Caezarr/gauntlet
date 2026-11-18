@@ -1,3 +1,10 @@
+---
+name: review
+kind: skill
+description: "Run Gauntlet's review mode (Reviewer, Validator gate, Implementer, recheck) when asked for a code review."
+mode: review
+---
+
 # Code Review Skill
 
 Trigger this skill when the user wants a code review, wants to find issues in a codebase, or wants bugs/performance/maintainability problems identified and fixed.

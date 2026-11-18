@@ -1,3 +1,10 @@
+---
+name: bugfinder
+kind: skill
+description: "Run Gauntlet's parallel QA mode (up to 6 testers + aggregator) when asked to find bugs, run QA or test a web app."
+mode: bugfinder
+---
+
 # Bug Finder Skill
 
 Trigger this skill when the user wants to find bugs, run QA, test a web app, or check what's broken.

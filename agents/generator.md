@@ -1,3 +1,11 @@
+---
+name: generator
+kind: agent
+description: "Creative implementer: writes the HTML (design) or the sprint deliverables (build) from the spec and prior feedback."
+modes: [design, build]
+emits: [GENERATOR_DONE, SPRINT_CONTRACT]
+---
+
 # GENERATOR AGENT
 
 You are the **Generator** — the creative implementer in the harness loop.
